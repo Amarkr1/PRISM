@@ -6,4 +6,4 @@ PRISM - **Pr**ecise counterfactual **I**mage generation using language guided **
 Link to the paper - [PRISM](https://openreview.net/forum?id=UpJMAlZNuo)
 
 
-Our code will be available upon acceptance.
+Our code will be available upon acceptance of the paper.
