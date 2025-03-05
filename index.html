@@ -1,11 +1,557 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-   <title>Paper Title</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PRISM: High-Resolution & Precise Counterfactual Medical Image Generation</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #1a73e8;
+            --primary-dark: #0d47a1;
+            --secondary-color: #f8f9fa;
+            --text-primary: #202124;
+            --text-secondary: #5f6368;
+            --text-tertiary: #80868b;
+            --shadow-sm: 0 1px 2px rgba(60, 64, 67, 0.1);
+            --shadow-md: 0 2px 6px rgba(60, 64, 67, 0.15);
+            --shadow-lg: 0 4px 12px rgba(60, 64, 67, 0.2);
+            --radius: 8px;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: var(--text-primary);
+            background-color: #ffffff;
+        }
+        
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        header {
+            background-color: var(--primary-color);
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 60px 0 40px;
+            text-align: center;
+            margin-bottom: 40px;
+            box-shadow: var(--shadow-md);
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+            line-height: 1.2;
+        }
+        
+        h2 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin: 40px 0 20px;
+            color: var(--primary-color);
+            border-bottom: 2px solid #e8eaed;
+            padding-bottom: 10px;
+        }
+        
+        h3 {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin: 25px 0 15px;
+            color: var(--text-primary);
+        }
+        
+        p {
+            margin: 16px 0;
+            color: var(--text-primary);
+            font-size: 1rem;
+            line-height: 1.7;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            color: rgba(255,255,255,0.9);
+            margin-bottom: 20px;
+        }
+        
+        .authors {
+            margin: 5px 0;
+            font-size: 1.1rem;
+            color: white;
+        }
+        
+        .author-name {
+            display: inline-block;
+            margin: 0 8px;
+            white-space: nowrap;
+        }
+        
+        .author-name a {
+            color: white;
+            text-decoration: none;
+            border-bottom: 1px dashed rgba(255,255,255,0.6);
+        }
+        
+        .author-name a:hover {
+            border-bottom: 1px solid white;
+        }
+        
+        .affiliations {
+            margin: 10px 0 20px;
+            font-size: 0.95rem;
+            color: rgba(255,255,255,0.8);
+        }
+        
+        .affiliation {
+            display: inline-block;
+            margin: 0 8px;
+            white-space: nowrap;
+        }
+        
+        .links-section {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin: 25px 0 10px;
+        }
+        
+        .link-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px 20px;
+            background-color: white;
+            border-radius: var(--radius);
+            text-decoration: none;
+            color: var(--primary-color);
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .link-button:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+        }
+        
+        .link-button i {
+            margin-right: 8px;
+        }
+        
+        .paper-section {
+            background-color: white;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-md);
+            padding: 30px;
+            margin: 30px 0;
+        }
+        
+        .abstract-section {
+            background-color: var(--secondary-color);
+            border-left: 4px solid var(--primary-color);
+            padding: 25px;
+            border-radius: var(--radius);
+            margin: 30px 0;
+        }
+        
+        .abstract-section h2 {
+            margin-top: 0;
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+        
+        .figure-container {
+            text-align: center;
+            margin: 40px 0;
+        }
+        
+        .figure-image {
+            width: 100%;
+            max-width: 900px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .figure-caption {
+            margin-top: 15px;
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 25px;
+            margin: 30px 0;
+        }
+        
+        .result-card {
+            background-color: white;
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .result-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .result-image {
+            width: 100%;
+            height: 220px;
+            background-color: #f1f3f4;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-bottom: 1px solid #e8eaed;
+        }
+        
+        .result-content {
+            padding: 20px;
+        }
+        
+        .result-title {
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            color: var(--primary-color);
+        }
+        
+        .result-description {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+        }
+        
+        .method-steps {
+            counter-reset: method-counter;
+            list-style-type: none;
+            padding-left: 0;
+        }
+        
+        .method-step {
+            position: relative;
+            padding-left: 50px;
+            margin-bottom: 20px;
+            counter-increment: method-counter;
+        }
+        
+        .method-step::before {
+            content: counter(method-counter);
+            position: absolute;
+            left: 0;
+            top: 0;
+            background-color: var(--primary-color);
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+        
+        .method-step h3 {
+            margin-top: 0;
+            margin-bottom: 10px;
+        }
+        
+        .citation {
+            background-color: var(--secondary-color);
+            padding: 20px;
+            border-radius: var(--radius);
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 0.9rem;
+            white-space: pre-wrap;
+            margin: 20px 0;
+            color: var(--text-secondary);
+            overflow-x: auto;
+        }
+        
+        footer {
+            background-color: var(--primary-dark);
+            color: white;
+            text-align: center;
+            padding: 40px 0;
+            margin-top: 60px;
+        }
+        
+        .footer-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .footer-links {
+            margin: 15px 0;
+        }
+        
+        .footer-links a {
+            color: white;
+            margin: 0 10px;
+            text-decoration: none;
+        }
+        
+        .footer-links a:hover {
+            text-decoration: underline;
+        }
+        
+        .copyright {
+            font-size: 0.9rem;
+            color: rgba(255,255,255,0.8);
+        }
+        
+        ul, ol {
+            padding-left: 25px;
+            margin: 20px 0;
+        }
+        
+        li {
+            margin-bottom: 10px;
+        }
+        
+        .highlight-box {
+            background-color: #e8f0fe;
+            border-radius: var(--radius);
+            padding: 20px;
+            margin: 25px 0;
+            border-left: 4px solid var(--primary-color);
+        }
+        
+        .highlight-box h3 {
+            margin-top: 0;
+            color: var(--primary-color);
+        }
+        
+        .metrics-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 25px 0;
+            font-size: 0.9rem;
+        }
+        
+        .metrics-table th, 
+        .metrics-table td {
+            border: 1px solid #e8eaed;
+            padding: 12px 15px;
+            text-align: center;
+        }
+        
+        .metrics-table th {
+            background-color: var(--primary-color);
+            color: white;
+            font-weight: 600;
+        }
+        
+        .metrics-table tr:nth-child(even) {
+            background-color: var(--secondary-color);
+        }
+        
+        .metrics-table td:first-child {
+            font-weight: 600;
+            text-align: left;
+        }
+        
+        .top-bar {
+            display: flex;
+            justify-content: flex-end;
+            padding: 15px 0;
+            background-color: white;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .nav-links a {
+            color: var(--text-primary);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            padding: 5px 0;
+            position: relative;
+        }
+        
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 0;
+            background-color: var(--primary-color);
+            transition: width 0.3s ease;
+        }
+        
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+        
+        @media (max-width: 768px) {
+            header {
+                padding: 40px 0 30px;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            h2 {
+                font-size: 1.5rem;
+            }
+            
+            .container {
+                padding: 0 15px;
+            }
+            
+            .paper-section {
+                padding: 20px;
+            }
+            
+            .method-step {
+                padding-left: 40px;
+            }
+            
+            .method-step::before {
+                width: 30px;
+                height: 30px;
+            }
+            
+            .results-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
 <body>
-   <h1>Paper Title</h1>
-   <p>This is the project page for the paper...</p>
-   <a href="paper.pdf" target="_blank">Download Paper</a>
+    <div class="top-bar">
+        <div class="container">
+            <div class="nav-links">
+                <a href="#abstract">Abstract</a>
+                <a href="#method">Method</a>
+                <a href="#results">Results</a>
+                <a href="#citation">Citation</a>
+            </div>
+        </div>
+    </div>
+    
+    <header>
+        <div class="container">
+            <h1>PRISM: High-Resolution & Precise Counterfactual Medical Image Generation</h1>
+            <p class="subtitle">Using Language-guided Stable Diffusion</p>
+            
+            <div class="authors">
+                <span class="author-name"><a href="#">Amar Kumar</a><sup>1,2</sup></span>
+                <span class="author-name"><a href="#">Anita Kriz</a><sup>1,2</sup></span>
+                <span class="author-name"><a href="#">Mohammad Havaei</a><sup>3</sup></span>
+                <span class="author-name"><a href="#">Tal Arbel</a><sup>1,2</sup></span>
+            </div>
+            
+            <div class="affiliations">
+                <span class="affiliation"><sup>1</sup>McGill University, Montreal, Canada</span>
+                <span class="affiliation"><sup>2</sup>MILA (Quebec AI Institute), Montreal, Canada</span>
+                <span class="affiliation"><sup>3</sup>Google Research, Montreal, Canada</span>
+            </div>
+            
+            <div class="links-section">
+                <a href="https://arxiv.org/pdf/2503.00196v1" class="link-button" target="_blank"><i class="fas fa-file-pdf"></i> Paper</a>
+                <a href="https://github.com/Amarkr1/PRISM" class="link-button" target="_blank"><i class="fab fa-github"></i> Code</a>
+                <a href="#" class="link-button"><i class="fas fa-play-circle"></i> Demo</a>
+                <a href="https://stanfordmlgroup.github.io/competitions/chexpert/" class="link-button" target="_blank"><i class="fas fa-database"></i> Dataset</a>
+                <a href="#" class="link-button"><i class="fas fa-video"></i> Video</a>
+            </div>
+        </div>
+    </header>
+    
+    <main class="container">
+        
+        
+        <div class="abstract-section" id="abstract">
+            <h2>Abstract</h2>
+            <p>
+                Developing reliable and generalizable deep learning systems for medical imaging faces significant obstacles due to spurious correlations, data imbalances, and limited text annotations in datasets. Addressing these challenges requires architectures robust to the unique complexities posed by medical imaging data. The rapid advancements in vision-language foundation models within the natural image domain prompt the question of how they can be adapted for medical imaging tasks. In this work, we present PRISM, a framework that leverages foundation models to generate high-resolution, language-guided medical image counterfactuals using Stable Diffusion. Our approach demonstrates unprecedented precision in selectively modifying spurious correlations (the medical devices) and disease features, enabling the removal and addition of specific attributes while preserving other image characteristics. Through extensive evaluation, we show how PRISM advances counterfactual generation and enables the development of more robust downstream classifiers for clinically deployable solutions. To facilitate broader adoption and research, we make our code publicly available at https://github.com/Amarkr1/PRISM.
+            </p>
+        </div>
+
+        
+        
+        <h2>Overview</h2>
+        <p>
+            -
+        </p>
+        
+        <div class="highlight-box">
+            <h3>Key Contributions</h3>
+            <ul>
+                <li>A novel pipeline for generating high-fidelity counterfactual medical images with unprecedented resolution and precision</li>
+                <li>A specialized language-guided stable diffusion model fine-tuned on diverse medical imaging datasets</li>
+                <li>A comprehensive evaluation framework for assessing the clinical accuracy and utility of generated counterfactual images</li>
+            </ul>
+        </div>
+        
+        <div class="figure-container">
+            <img src="images/arch_v2.png" alt="PRISM pipeline" class="figure-image">
+            <div class="figure-caption">
+                <strong>Figure 2:</strong> Overview of the PRISM pipeline. Given an input medical image and a text description of the desired edit, our model generates a counterfactual image that implements the requested changes while preserving patient-specific anatomical details.
+            </div>
+        </div>
+        
+        
+        
+        
+        
+        
+                
+        <h2 id="citation">Citation</h2>
+        <div class="citation">
+@article{kumar2025prism,
+title={PRISM: High-Resolution \& Precise Counterfactual Medical Image Generation using Language-guided Stable Diffusion},
+author={Kumar, Amar and Kriz, Anita and Havaei, Mohammad and Arbel, Tal},
+year={2025}
+}
+        </div>
+        
+        <h2>Acknowledgements</h2>
+        <p>
+            The authors are grateful for funding provided by the Natural Sciences and Engineering Research Council of Canada, the Canadian Institute for Advanced Research (CIFAR) Artificial Intelligence Chairs program, Mila - Quebec AI Institute, Google Research, Calcul Quebec, Fonds de recherche du Québec (FRQNT),  and the Digital Research Alliance of Canada.
+        </p>
+    </main>
+    
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-links">
+                    <a href="#">Home</a>
+                    <a href="#">Research</a>
+                    <a href="#">Publications</a>
+                    <a href="#">Team</a>
+                    <a href="mailto:amar.kumar@mail.mcgill.ca">Contact</a>
+                </div>
+                <p class="copyright">© 2025 PRISM Research Team | McGill University | Probabilistic Vision Group</p>
+            </div>
+        </div>
+    </footer>
 </body>
 </html>
