@@ -500,6 +500,40 @@
             background-color: var(--primary-dark);
         }
         
+        /* New styles for GIF controls */
+        .gif-item {
+            position: relative;
+        }
+        
+        .toggle-play-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            padding: 6px 15px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 6px rgba(60, 64, 67, 0.3);
+            transition: background-color 0.2s ease, transform 0.2s ease;
+            z-index: 10;
+            font-size: 0.9rem;
+        }
+        
+        .toggle-play-btn i {
+            margin-right: 5px;
+        }
+        
+        .toggle-play-btn:hover {
+            background-color: rgba(13, 71, 161, 0.9);
+            transform: scale(1.05);
+        }
+        
+        .toggle-play-btn:active {
+            transform: scale(0.95);
+        }
+
         .image-comparison {
             display: flex;
             background: var(--secondary-color);
@@ -712,12 +746,46 @@
         </div>
         
 
-         <h2 id="results">Results</h2>
+        <h2 id="results">Results</h2>
         <div class="results">
             <div class="figure-container">
-                <img src="./images/results.gif" alt="PRISM results visualization" class="figure-image" style="max-width: 800px; width: 25%; height: auto;">
+                <div class="gif-container" style="display: flex; justify-content: center; gap: 30px; flex-wrap: wrap;">
+                    <div class="gif-item" style="flex: 1; min-width: 300px; max-width: 450px;">
+                        <img src="./images/animation5.gif" alt="PRISM results visualization - pathology addition" class="figure-image gif-image" style="width: 100%; height: auto;">
+                        <div class="gif-title" style="text-align: center; font-weight: 600; color: var(--primary-color); margin-top: 10px; margin-bottom: 5px;">
+                            Devices -> No Devices
+                        </div>
+                        <div class="gif-controls" style="display: flex; justify-content: center; margin-top: 10px;">
+                            <button class="toggle-play-btn" data-status="playing" title="Pause/Play Animation" style="position: static; margin: 0 auto;">
+                                <i class="fas fa-pause"></i> Pause Animation
+                            </button>
+                        </div>
+                    </div>
+                    <div class="gif-item" style="flex: 1; min-width: 300px; max-width: 450px;">
+                        <img src="./images/animation4.gif" alt="PRISM results visualization - device removal" class="figure-image gif-image" style="width: 100%; height: auto;">
+                        <div class="gif-title" style="text-align: center; font-weight: 600; color: var(--primary-color); margin-top: 10px; margin-bottom: 5px;">
+                            Pleural Effusion --> Healthy
+                        </div>
+                        <div class="gif-controls" style="display: flex; justify-content: center; margin-top: 10px;">
+                            <button class="toggle-play-btn" data-status="playing" title="Pause/Play Animation" style="position: static; margin: 0 auto;">
+                                <i class="fas fa-pause"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="gif-item" style="flex: 1; min-width: 300px; max-width: 450px;">
+                        <img src="./images/results.gif" alt="PRISM results visualization - device removal" class="figure-image gif-image" style="width: 100%; height: auto;">
+                        <div class="gif-title" style="text-align: center; font-weight: 600; color: var(--primary-color); margin-top: 10px; margin-bottom: 5px;">
+                            Cardiomegaly --> Healthy
+                        </div>
+                        <div class="gif-controls" style="display: flex; justify-content: center; margin-top: 10px;">
+                            <button class="toggle-play-btn" data-status="playing" title="Pause/Play Animation" style="position: static; margin: 0 auto;">
+                                <i class="fas fa-pause"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
                 <div class="figure-caption">
-                    <strong>Figure 3:</strong> Demonstration of PRISM's ability to perform precise counterfactual edits on chest X-rays. The GIF shows the progression from original images to counterfactual variants with specific pathologies added or removed while preserving anatomical integrity.
+                    <strong>Figure 3:</strong> Demonstration of PRISM's ability to perform precise counterfactual edits on chest X-rays. The GIFs show the progression from original images to counterfactual variants with specific pathologies added or removed while preserving anatomical integrity. <em>Use the pause/play buttons to control the animations.</em>
                 </div>
             </div>
             <p>
@@ -757,8 +825,8 @@ year={2025}
         </div>
     </footer>
 
-    <script>
-        // JavaScript for image gallery scrolling
+     <script>
+        // Original script for gallery scrolling preserved
         document.addEventListener('DOMContentLoaded', function() {
             const gallery = document.getElementById('image-gallery');
             const scrollLeftBtn = document.getElementById('scroll-left');
@@ -767,17 +835,64 @@ year={2025}
             // Scroll amount for each button click
             const scrollAmount = 330; // Slightly more than image width to account for gap
             
-            scrollLeftBtn.addEventListener('click', function() {
-                gallery.scrollBy({
-                    left: scrollAmount,
-                    behavior: 'smooth'
+            if (scrollLeftBtn && scrollRightBtn && gallery) {
+                scrollLeftBtn.addEventListener('click', function() {
+                    gallery.scrollBy({
+                        left: scrollAmount,
+                        behavior: 'smooth'
+                    });
                 });
-            });
+                
+                scrollRightBtn.addEventListener('click', function() {
+                    gallery.scrollBy({
+                        left: -scrollAmount,
+                        behavior: 'smooth'
+                    });
+                });
+            }
             
-            scrollRightBtn.addEventListener('click', function() {
-                gallery.scrollBy({
-                    left: -scrollAmount,
-                    behavior: 'smooth'
+            // Simple and reliable GIF toggle functionality
+            const toggleButtons = document.querySelectorAll('.toggle-play-btn');
+            
+            // Create a single transparent 1x1 pixel image to use for pausing
+            const transparentPixel = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
+            
+            toggleButtons.forEach(button => {
+                // Get the related GIF image
+                const gifItem = button.closest('.gif-item');
+                const gifImage = gifItem.querySelector('.gif-image');
+                
+                // Store original source on first load
+                if (!gifImage.hasAttribute('data-original-src')) {
+                    gifImage.setAttribute('data-original-src', gifImage.src);
+                }
+                
+                button.addEventListener('click', function() {
+                    const isPlaying = this.getAttribute('data-status') === 'playing';
+                    
+                    if (isPlaying) {
+                        // PAUSE: Store current source if needed
+                        if (!gifImage.hasAttribute('data-original-src')) {
+                            gifImage.setAttribute('data-original-src', gifImage.src);
+                        }
+                        
+                        // Replace with transparent pixel to stop animation
+                        gifImage.src = transparentPixel;
+                        
+                        // Update button state
+                        this.setAttribute('data-status', 'paused');
+                        this.innerHTML = '<i class="fas fa-play"></i> Play Animation';
+                    } else {
+                        // PLAY: Restore original GIF with timestamp to force reload
+                        const originalSrc = gifImage.getAttribute('data-original-src');
+                        if (originalSrc) {
+                            gifImage.src = originalSrc + '?t=' + Date.now();
+                        }
+                        
+                        // Update button state
+                        this.setAttribute('data-status', 'playing');
+                        this.innerHTML = '<i class="fas fa-pause"></i> Pause Animation';
+                    }
                 });
             });
         });
