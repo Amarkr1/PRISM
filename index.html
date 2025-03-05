@@ -409,6 +409,134 @@
             width: 100%;
         }
         
+        /* New styles for image gallery */
+        .image-gallery-section {
+            background-color: white;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-md);
+            padding: 30px;
+            margin: 30px 0;
+        }
+        
+        .image-gallery {
+            display: flex;
+            flex-direction: row-reverse; /* Makes the gallery run from right to left */
+            overflow-x: auto;
+            gap: 15px;
+            padding: 20px 0;
+            scroll-behavior: smooth;
+        }
+        
+        .gallery-item {
+            flex: 0 0 auto;
+            width: 300px;
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+            transition: transform 0.3s ease;
+            position: relative;
+        }
+        
+        .gallery-item:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .gallery-image {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            display: block;
+        }
+        
+        .gallery-title {
+            background-color: var(--primary-color);
+            color: white;
+            text-align: center;
+            padding: 8px 0;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+        
+        .gallery-caption {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 10px;
+            font-size: 0.9rem;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .gallery-item:hover .gallery-caption {
+            opacity: 1;
+        }
+        
+        .gallery-controls {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .gallery-control {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        
+        .gallery-control:hover {
+            background-color: var(--primary-dark);
+        }
+        
+        .image-comparison {
+            display: flex;
+            background: var(--secondary-color);
+            border-radius: var(--radius);
+            padding: 20px;
+            margin: 20px 0;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+        
+        .comparison-pair {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            width: 300px;
+        }
+        
+        .comparison-image {
+            width: 100%;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .comparison-label {
+            font-weight: 600;
+            color: var(--primary-color);
+            font-size: 0.9rem;
+        }
+        
+        .comparison-arrow {
+            color: var(--primary-color);
+            font-size: 2rem;
+        }
+        
         @media (max-width: 768px) {
             header {
                 padding: 40px 0 30px;
@@ -442,6 +570,18 @@
             .results-grid {
                 grid-template-columns: 1fr;
             }
+            
+            .gallery-item {
+                width: 250px;
+            }
+            
+            .gallery-image {
+                height: 250px;
+            }
+            
+            .comparison-pair {
+                width: 100%;
+            }
         }
     </style>
 </head>
@@ -450,6 +590,7 @@
         <div class="container">
             <div class="nav-links">
                 <a href="#abstract">Abstract</a>
+                <a href="#synthesized-images">Synthesized Images</a>
                 <a href="#method">Method</a>
                 <a href="#results">Results</a>
                 <a href="#citation">Citation</a>
@@ -487,7 +628,6 @@
     
     <main class="container">
         
-        
         <div class="abstract-section" id="abstract">
             <h2>Abstract</h2>
             <p>
@@ -495,6 +635,59 @@
             </p>
         </div>
 
+        <!-- New Synthesized Images Section -->
+        <h2 id="synthesized-images">Synthesized Images</h2>
+        <p>
+            PRISM can generate high-fidelity counterfactual medical images with precise control over specific attributes. Below we showcase a variety of examples demonstrating our model's capability to sythesize text given a text prompt.
+        </p>
+        
+        <!-- Image Gallery with Right-to-Left Display -->
+        <div class="image-gallery-section">
+            
+            
+            <div class="image-gallery" id="image-gallery">
+                <div class="gallery-item">
+                    <img src="images/image1.png" alt="Chest X-ray with pneumothorax" class="gallery-image">
+                    <div class="gallery-title">Cardiomegaly</div>
+                    <div class="gallery-caption">Chest x-ray of a patient with severe cardiomegaly and lots of support devices</div>
+                </div>
+                <div class="gallery-item">
+                    <img src="images/image2.png" alt="Chest X-ray with pleural effusion" class="gallery-image">
+                    <div class="gallery-title">Healthy</div>
+                    <div class="gallery-caption">Chest x-ray of a patient with no findings</div>
+                </div>
+                <div class="gallery-item">
+                    <img src="images/image3.png" alt="Chest X-ray with removed support device" class="gallery-image">
+                    <div class="gallery-title">Healthy</div>
+                    <div class="gallery-caption">Chest x-ray of a patient with no findings and support devices</div>
+                </div>
+                <div class="gallery-item">
+                    <img src="images/image4.png" alt="Chest X-ray with added cardiomegaly" class="gallery-image">
+                    <div class="gallery-title">Cardiomegaly</div>
+                    <div class="gallery-caption">Chest x-ray of a patient with cardiomegaly and no devices</div>
+                </div>
+                <div class="gallery-item">
+                    <img src="images/image5.png" alt="Normal chest X-ray" class="gallery-image">
+                    <div class="gallery-title">Cardiomegaly & Pleural Effusion</div>
+                    <div class="gallery-caption">Chest x-ray of a patient with cardiomegaly and pleural effusion</div>
+                </div>
+                <div class="gallery-item">
+                    <img src="images/image6.png" alt="Normal chest X-ray" class="gallery-image">
+                    <div class="gallery-title">Pleural Effusion</div>
+                    <div class="gallery-caption">Chest x-ray of a patient with pleural effusion</div>
+                </div>
+                <div class="gallery-item">
+                    <img src="images/image7.png" alt="Normal chest X-ray" class="gallery-image">
+                    <div class="gallery-title">Pleural Effusion</div>
+                    <div class="gallery-caption">Chest x-ray of a patient with pleural effusion and support devices</div>
+                </div>
+            </div>
+            <div class="gallery-controls">
+                <button class="gallery-control" id="scroll-right"><i class="fas fa-chevron-left"></i></button>
+                <button class="gallery-control" id="scroll-left"><i class="fas fa-chevron-right"></i></button>
+            </div>
+        </div>
+        
         
         
         <h2>Overview</h2>
@@ -563,5 +756,31 @@ year={2025}
             </div>
         </div>
     </footer>
+
+    <script>
+        // JavaScript for image gallery scrolling
+        document.addEventListener('DOMContentLoaded', function() {
+            const gallery = document.getElementById('image-gallery');
+            const scrollLeftBtn = document.getElementById('scroll-left');
+            const scrollRightBtn = document.getElementById('scroll-right');
+            
+            // Scroll amount for each button click
+            const scrollAmount = 330; // Slightly more than image width to account for gap
+            
+            scrollLeftBtn.addEventListener('click', function() {
+                gallery.scrollBy({
+                    left: scrollAmount,
+                    behavior: 'smooth'
+                });
+            });
+            
+            scrollRightBtn.addEventListener('click', function() {
+                gallery.scrollBy({
+                    left: -scrollAmount,
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
 </body>
 </html>
