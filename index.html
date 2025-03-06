@@ -197,7 +197,40 @@ year={2025}
             The authors are grateful for funding provided by the Natural Sciences and Engineering Research Council of Canada, the Canadian Institute for Advanced Research (CIFAR) Artificial Intelligence Chairs program, Mila - Quebec AI Institute, Google Research, Calcul Quebec, Fonds de recherche du Québec (FRQNT),  and the Digital Research Alliance of Canada.
         </p>
 
-             
+        <!-- Feedback Icon -->
+        <div class="feedback-icon" id="feedbackIcon">
+            <i class="fas fa-comments"></i>
+        </div>
+
+        <!-- Feedback Modal -->
+        <div class="feedback-modal" id="feedbackModal">
+            <div class="feedback-content">
+                <span class="close-feedback">&times;</span>
+                <h2>Contact Us</h2>
+                <form id="feedbackForm" action="https://formspree.io/f/mzzepznq" method="POST">
+                    <div class="form-group">
+                        <label for="name">Name <span class="required">*</span></label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email <span class="required">*</span></label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="subject">Subject <span class="required">*</span></label>
+                        <input type="text" id="subject" name="subject" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="feedback">Feedback/Question <span class="required">*</span></label>
+                        <textarea id="feedback" name="message" rows="5" required></textarea>
+                    </div>
+                    <!-- Hidden field to specify the recipient email -->
+                    <input type="hidden" name="_replyto" value="amar.kumar@mail.mcgill.ca">
+                    <!-- No need for _next field since we're handling this with JavaScript -->
+                    <button type="submit" class="submit-feedback">Submit</button>
+                </form>
+            </div>
+        </div> 
 
     </main>
     

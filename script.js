@@ -148,4 +148,43 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     });
+    
+    // Feedback form functionality (Formspree integration)
+    const feedbackIcon = document.getElementById('feedbackIcon');
+    const feedbackModal = document.getElementById('feedbackModal');
+    const closeBtn = document.querySelector('.close-feedback');
+    
+    // If feedback elements exist, set up event listeners
+    if (feedbackIcon && feedbackModal) {
+        // Open modal when clicking the feedback icon
+        feedbackIcon.addEventListener('click', function() {
+            feedbackModal.style.display = 'flex';
+        });
+        
+        // Close modal when clicking the X button
+        if (closeBtn) {
+            closeBtn.addEventListener('click', function() {
+                feedbackModal.style.display = 'none';
+            });
+        }
+        
+        // Close modal when clicking outside the content
+        window.addEventListener('click', function(event) {
+            if (event.target === feedbackModal) {
+                feedbackModal.style.display = 'none';
+            }
+        });
+        
+        // Handle form submission to reset fields
+        const feedbackForm = document.getElementById('feedbackForm');
+        if (feedbackForm) {
+            feedbackForm.addEventListener('submit', function() {
+                // Set a small timeout to allow the form to submit before resetting
+                setTimeout(() => {
+                    // Reset the form fields
+                    this.reset();
+                }, 100);
+            });
+        }
+    }
 });
