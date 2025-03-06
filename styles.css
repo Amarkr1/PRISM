@@ -308,6 +308,22 @@ footer {
 .copyright {
     font-size: 0.9rem;
     color: rgba(255,255,255,0.8);
+    margin-bottom: 15px;
+}
+
+.visitor-counter {
+    font-size: 0.85rem;
+    color: rgba(255,255,255,0.7);
+    background-color: rgba(255,255,255,0.1);
+    padding: 5px 12px;
+    border-radius: 20px;
+    display: inline-block;
+    margin-top: 10px;
+}
+
+#visitor-count {
+    font-weight: bold;
+    color: white;
 }
 
 ul, ol {

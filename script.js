@@ -1,4 +1,58 @@
 document.addEventListener('DOMContentLoaded', function() {
+    // Visitor counter functionality
+    function updateVisitorCount() {
+        const visitorCountElement = document.getElementById('visitor-count');
+        
+        // Check if localStorage is available
+        if (typeof(Storage) !== "undefined") {
+            // Get the total visitors count
+            let totalVisitors = localStorage.getItem('totalVisitors');
+            
+            // Check for first time visits
+            const hasVisited = localStorage.getItem('hasVisited');
+            
+            if (!hasVisited) {
+                // First visit - increment count
+                totalVisitors = totalVisitors ? Number(totalVisitors) + 1 : 1;
+                localStorage.setItem('totalVisitors', totalVisitors);
+                localStorage.setItem('hasVisited', 'true');
+                
+                // Send to analytics server (mock function)
+                logVisit();
+            }
+            
+            // Update the display
+            if (visitorCountElement) {
+                visitorCountElement.textContent = totalVisitors || 0;
+            }
+        } else {
+            // localStorage not supported
+            if (visitorCountElement) {
+                visitorCountElement.textContent = "?";
+            }
+            console.log("LocalStorage not supported - visitor count disabled");
+        }
+    }
+    
+    // Mock function to simulate sending data to an analytics server
+    function logVisit() {
+        // In a real implementation, this would make an API call to record the visit
+        console.log("New visit logged");
+        
+        // You could replace this with actual analytics code like:
+        // fetch('https://your-analytics-api.com/log-visit', {
+        //     method: 'POST',
+        //     body: JSON.stringify({
+        //         timestamp: new Date().toISOString(),
+        //         page: window.location.pathname,
+        //         referrer: document.referrer
+        //     })
+        // });
+    }
+    
+    // Initialize the visitor counter
+    updateVisitorCount();
+    
     // Gallery scrolling functionality
     const gallery = document.getElementById('image-gallery');
     const scrollLeftBtn = document.getElementById('scroll-left');
