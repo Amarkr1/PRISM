@@ -14,29 +14,50 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
-    // First check if this counter exists, if not create it
+    // Function to handle errors
+    function handleError(error) {
+        console.error('Error with visitor counter:', error);
+        // Keep the default value from HTML in case of error
+    }
+    
+    // Check if counter exists, create it if not, then increment
     fetch(`https://api.countapi.xyz/get/${namespace}/${key}`)
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
         .then(data => {
             // If counter doesn't exist or returned an error
-            if (!data.value) {
+            if (data.value === undefined || data.value === null) {
                 // Create a new counter starting at 42
                 return fetch(`https://api.countapi.xyz/set/${namespace}/${key}?value=42`)
-                    .then(response => response.json());
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Failed to set counter');
+                        }
+                        return response.json();
+                    });
             }
             return data;
         })
         .then(data => {
-            // Always increment the counter on page visit (no session check)
+            // First display current value
+            updateVisitorCount(data.value);
+            
+            // Then increment the counter on page visit
             return fetch(`https://api.countapi.xyz/hit/${namespace}/${key}`)
-                .then(response => response.json());
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Failed to increment counter');
+                    }
+                    return response.json();
+                });
         })
         .then(data => {
-            // Update the display with the new value
+            // Update the display with the new incremented value
             updateVisitorCount(data.value);
         })
-        .catch(error => {
-            console.error('Error with visitor counter:', error);
-            // Keep the default value from HTML in case of error
-        });
+        .catch(handleError);
 });
