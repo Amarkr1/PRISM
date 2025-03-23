@@ -1,7 +1,36 @@
-// Visitor counter script
+// Get the current visitor count immediately when the script loads
+// This runs before DOMContentLoaded to get the count as soon as possible
+(function() {
+    // Namespace and key for this specific site
+    const namespace = 'prism-medical-imaging';
+    const key = 'visitors';
+    
+    // First try to get the current count without incrementing
+    fetch(`https://api.countapi.xyz/get/${namespace}/${key}`)
+        .then(response => response.json())
+        .then(data => {
+            // If the counter doesn't exist yet, create it with an initial value
+            if (data.value === undefined) {
+                return fetch(`https://api.countapi.xyz/create?namespace=${namespace}&key=${key}&value=1`);
+            }
+            return data;
+        })
+        .then(data => {
+            // Update the counter element if it exists in the DOM
+            const counterElement = document.getElementById('visitor-count');
+            if (counterElement) {
+                counterElement.textContent = (typeof data.value === 'number') ? 
+                    data.value.toLocaleString() : data.toLocaleString();
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching initial visitor count:', error);
+        });
+})();
+
+// Handle session-based counting after DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
-    // Use CountAPI as a simple, no-setup backend for counting
-    const namespace = 'prism-medical-imaging'; // Choose a unique namespace for your site
+    const namespace = 'prism-medical-imaging';
     const key = 'visitors';
     
     // Function to update the counter display
@@ -27,23 +56,6 @@ document.addEventListener('DOMContentLoaded', function() {
             })
             .catch(error => {
                 console.error('Error updating visitor count:', error);
-                // Fallback: just get the current count
-                fetch(`https://api.countapi.xyz/get/${namespace}/${key}`)
-                    .then(response => response.json())
-                    .then(data => {
-                        updateVisitorCount(data.value);
-                    })
-                    .catch(e => console.error('Failed to get visitor count:', e));
-            });
-    } else {
-        // This is a returning visitor within the same session, just get the current count
-        fetch(`https://api.countapi.xyz/get/${namespace}/${key}`)
-            .then(response => response.json())
-            .then(data => {
-                updateVisitorCount(data.value);
-            })
-            .catch(error => {
-                console.error('Error fetching visitor count:', error);
             });
     }
 });
