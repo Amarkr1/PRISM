@@ -1,61 +1,42 @@
-// Get the current visitor count immediately when the script loads
-// This runs before DOMContentLoaded to get the count as soon as possible
-(function() {
-    // Namespace and key for this specific site
-    const namespace = 'prism-medical-imaging';
-    const key = 'visitors';
-    
-    // First try to get the current count without incrementing
-    fetch(`https://api.countapi.xyz/get/${namespace}/${key}`)
-        .then(response => response.json())
-        .then(data => {
-            // If the counter doesn't exist yet, create it with an initial value
-            if (data.value === undefined) {
-                return fetch(`https://api.countapi.xyz/create?namespace=${namespace}&key=${key}&value=1`);
-            }
-            return data;
-        })
-        .then(data => {
-            // Update the counter element if it exists in the DOM
-            const counterElement = document.getElementById('visitor-count');
-            if (counterElement) {
-                counterElement.textContent = (typeof data.value === 'number') ? 
-                    data.value.toLocaleString() : data.toLocaleString();
-            }
-        })
-        .catch(error => {
-            console.error('Error fetching initial visitor count:', error);
-        });
-})();
-
-// Handle session-based counting after DOM is loaded
+// Wait for the DOM to be fully loaded
 document.addEventListener('DOMContentLoaded', function() {
-    const namespace = 'prism-medical-imaging';
+    // Get the counter element
+    const counterElement = document.getElementById('visitor-count');
+    
+    // Use CountAPI as a backend for counting
+    const namespace = 'prism-medical-imaging'; // Unique namespace for your site
     const key = 'visitors';
     
     // Function to update the counter display
     function updateVisitorCount(count) {
-        const counterElement = document.getElementById('visitor-count');
         if (counterElement) {
             counterElement.textContent = count.toLocaleString();
         }
     }
     
-    // Check if this is a new session
-    const lastVisit = sessionStorage.getItem('lastVisit');
-    const currentTime = new Date().getTime();
-    
-    if (!lastVisit || (currentTime - parseInt(lastVisit)) > 1000 * 60 * 30) { // 30 minute session
-        // This is a new session, increment the counter
-        fetch(`https://api.countapi.xyz/hit/${namespace}/${key}`)
-            .then(response => response.json())
-            .then(data => {
-                updateVisitorCount(data.value);
-                // Save the visit time
-                sessionStorage.setItem('lastVisit', currentTime.toString());
-            })
-            .catch(error => {
-                console.error('Error updating visitor count:', error);
-            });
-    }
+    // First check if this counter exists, if not create it
+    fetch(`https://api.countapi.xyz/get/${namespace}/${key}`)
+        .then(response => response.json())
+        .then(data => {
+            // If counter doesn't exist or returned an error
+            if (!data.value) {
+                // Create a new counter starting at 42
+                return fetch(`https://api.countapi.xyz/set/${namespace}/${key}?value=42`)
+                    .then(response => response.json());
+            }
+            return data;
+        })
+        .then(data => {
+            // Always increment the counter on page visit (no session check)
+            return fetch(`https://api.countapi.xyz/hit/${namespace}/${key}`)
+                .then(response => response.json());
+        })
+        .then(data => {
+            // Update the display with the new value
+            updateVisitorCount(data.value);
+        })
+        .catch(error => {
+            console.error('Error with visitor counter:', error);
+            // Keep the default value from HTML in case of error
+        });
 });
