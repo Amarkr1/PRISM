@@ -1,5 +1,7 @@
-name = "visitor-counter"
+name = "prism"
 main = "src/index.js"
 compatibility_date = "2025-03-24"
 
-# You'll add the KV binding after creating your KV namespace
+kv_namespaces = [
+  { binding = "VISITOR_COUNTER", id = "YOUR_KV_NAMESPACE_ID" }
+]
