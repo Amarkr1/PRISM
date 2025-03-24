@@ -3,15 +3,12 @@ document.addEventListener('DOMContentLoaded', function() {
     // Get the counter element
     const counterElement = document.getElementById('visitor-count');
     
-    // Check if we've already counted this visitor in this session
-    const sessionKey = 'prism-visitor-counted';
-    const hasBeenCounted = sessionStorage.getItem(sessionKey);
+    // Use CountAPI as a backend for counting
+    const namespace = 'prism-medical-imaging'; // Unique namespace for your site
+    const key = 'visitors';
     
-    // Cloudflare Worker URL - our deployed worker
-    const workerBaseUrl = 'https://prism.amar-kumar.workers.dev';
-    
-    // Function to update the display with count
-    function updateCounterDisplay(count) {
+    // Function to update the counter display
+    function updateVisitorCount(count) {
         if (counterElement) {
             counterElement.textContent = count.toLocaleString();
         }
@@ -20,43 +17,47 @@ document.addEventListener('DOMContentLoaded', function() {
     // Function to handle errors
     function handleError(error) {
         console.error('Error with visitor counter:', error);
-        // If error occurs, show a default value
-        if (counterElement) {
-            counterElement.textContent = '42+';
-        }
+        // Keep the default value from HTML in case of error
     }
     
-    try {
-        if (!hasBeenCounted) {
-            // New session - increment the counter
-            fetch(`${workerBaseUrl}/increment`)
+    // Check if counter exists, create it if not, then increment
+    fetch(`https://api.countapi.xyz/get/${namespace}/${key}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            // If counter doesn't exist or returned an error
+            if (data.value === undefined || data.value === null) {
+                // Create a new counter starting at 42
+                return fetch(`https://api.countapi.xyz/set/${namespace}/${key}?value=42`)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Failed to set counter');
+                        }
+                        return response.json();
+                    });
+            }
+            return data;
+        })
+        .then(data => {
+            // First display current value
+            updateVisitorCount(data.value);
+            
+            // Then increment the counter on page visit
+            return fetch(`https://api.countapi.xyz/hit/${namespace}/${key}`)
                 .then(response => {
                     if (!response.ok) {
-                        throw new Error('Network response was not ok');
+                        throw new Error('Failed to increment counter');
                     }
                     return response.json();
-                })
-                .then(data => {
-                    updateCounterDisplay(data.count);
-                    // Mark this session as counted
-                    sessionStorage.setItem(sessionKey, 'true');
-                })
-                .catch(handleError);
-        } else {
-            // Returning visitor in same session - just get current count
-            fetch(`${workerBaseUrl}`)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    updateCounterDisplay(data.count);
-                })
-                .catch(handleError);
-        }
-    } catch (error) {
-        handleError(error);
-    }
+                });
+        })
+        .then(data => {
+            // Update the display with the new incremented value
+            updateVisitorCount(data.value);
+        })
+        .catch(handleError);
 });
