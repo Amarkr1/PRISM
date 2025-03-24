@@ -3,5 +3,5 @@ main = "src/index.js"
 compatibility_date = "2025-03-24"
 
 kv_namespaces = [
-  { binding = "VISITOR_COUNTER", id = "YOUR_KV_NAMESPACE_ID" }
+  { binding = "VISITOR_COUNTER", id = "349349796b7748eca22d13e0bc6ea7da" }
 ]
