@@ -1,59 +1,58 @@
-// Wait for the DOM to be fully loaded
-document.addEventListener('DOMContentLoaded', function() {
-    // Get the counter element
-    const counterElement = document.getElementById('visitor-count');
-    
-    // Check if we've already counted this visitor in this session
-    const sessionKey = 'prism-visitor-counted';
-    const hasBeenCounted = sessionStorage.getItem(sessionKey);
-    
-    // Cloudflare Worker URL - replace with your worker's URL
-    const workerBaseUrl = 'https://visitor-counter.yourdomain.pages.dev';
-    
-    // Function to update the display with count
-    function updateCounterDisplay(count) {
-        if (counterElement) {
-            counterElement.textContent = count.toLocaleString();
-        }
+// This is a Cloudflare Worker script - no browser code here
+export default {
+  async fetch(request, env) {
+    // Set CORS headers to allow your site
+    const corsHeaders = {
+      'Access-Control-Allow-Origin': '*', // Replace with your actual domain in production
+      'Access-Control-Allow-Methods': 'GET, HEAD, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type',
     }
     
-    // Function to handle errors
-    function handleError(error) {
-        console.error('Error with visitor counter:', error);
-        // If error occurs, show the default value that's in the HTML
+    // Handle preflight OPTIONS request
+    if (request.method === 'OPTIONS') {
+      return new Response(null, { headers: corsHeaders })
     }
+    
+    // Get URL path to differentiate between increment and just getting the count
+    const url = new URL(request.url)
+    const path = url.pathname
     
     try {
-        if (!hasBeenCounted) {
-            // New session - increment the counter
-            fetch(`${workerBaseUrl}/increment`)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    updateCounterDisplay(data.count);
-                    // Mark this session as counted
-                    sessionStorage.setItem(sessionKey, 'true');
-                })
-                .catch(handleError);
-        } else {
-            // Returning visitor in same session - just get current count
-            fetch(`${workerBaseUrl}`)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    updateCounterDisplay(data.count);
-                })
-                .catch(handleError);
+      // Get the current count from KV storage
+      let count = await env.VISITOR_COUNTER.get('visitors')
+      if (count === null) {
+        count = '42' // Start with base count
+      }
+      
+      // Convert to number
+      count = parseInt(count)
+      
+      // Only increment for specific endpoint
+      if (path === '/increment') {
+        // Increment and store the new count
+        await env.VISITOR_COUNTER.put('visitors', (count + 1).toString())
+        count += 1
+      }
+      
+      // Return the count as JSON
+      return new Response(JSON.stringify({ count: count }), {
+        headers: {
+          'Content-Type': 'application/json',
+          ...corsHeaders
         }
+      })
     } catch (error) {
-        handleError(error);
+      // Handle errors gracefully
+      return new Response(JSON.stringify({ 
+        error: 'Counter service unavailable', 
+        count: 42 // Fallback count
+      }), {
+        status: 500,
+        headers: {
+          'Content-Type': 'application/json',
+          ...corsHeaders
+        }
+      })
     }
-});
+  }
+}
