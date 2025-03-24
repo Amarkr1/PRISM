@@ -1,0 +1,5 @@
+name = "visitor-counter"
+main = "src/index.js"
+compatibility_date = "2025-03-24"
+
+# You'll add the KV binding after creating your KV namespace
