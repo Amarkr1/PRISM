@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PRISM Paper Walkthrough</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/walkthrough-style.css">
+    
+</head>
+<body>
+    <div class="top-bar">
+        <div class="container">
+            <div class="nav-links">
+                <a href="index.html"><i class="fas fa-home"></i> Home</a>
+                <a href="index.html#abstract"><i class="fas fa-file-alt"></i> Abstract</a>
+                <a href="index.html#method"><i class="fas fa-cogs"></i> Method</a>
+                <a href="index.html#results"><i class="fas fa-chart-bar"></i> Results</a>
+                <a href="index.html#citation"><i class="fas fa-quote-right"></i> Citation</a>
+                <a href="paper-walkthrough.html" class="active"><i class="fas fa-book-open"></i> Paper Walkthrough</a>
+            </div>
+        </div>
+    </div>
+    
+    <header>
+        <div class="container">
+            <h1>PRISM: Paper Walkthrough</h1>
+            <p class="subtitle">Audio guide explaining our research</p>
+        </div>
+    </header>
+    
+    <main class="container">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+            <li class="breadcrumb-item">Paper Walkthrough</li>
+        </ol>
+        
+        <!-- Audio Player and Transcript Section -->
+        <div class="audio-section">
+            <div class="section-title-container">
+                <i class="fas fa-headphones section-icon"></i>
+                <h2>Audio Paper Walkthrough</h2>
+            </div>
+            
+            <p>Listen to our researchers explain key concepts and findings from the PRISM paper. The transcript will highlight in real-time as the audio plays.</p>
+            
+            <!-- Disclaimer about Notebook LM -->
+            <div class="disclaimer">
+                <i class="fas fa-info-circle"></i>
+                <div>
+                    <strong>Note:</strong> This audio was generated using Notebook LM, an AI language model. The content represents our research, but the voice is synthetically generated.
+                </div>
+            </div>
+
+            <!-- Jump to topic section -->
+            <div class="topic-buttons">
+                <h3 class="topic-heading">Jump to a topic:</h3>
+                <button class="topic-button" data-timestamp="0">Restart</button>
+            </div>
+            
+            <div class="audio-container">
+                <!-- Audio Player Column -->
+                <div class="audio-player">
+                    <!-- Direct player -->
+                    <div class="direct-player">
+                        <audio controls id="paper-audio" preload="metadata">
+                            <source src="https://storage.googleapis.com/prism-research/paper-walkthrough.wav" type="audio/wav">
+                            <source src="https://storage.googleapis.com/prism-research/paper-walkthrough.mp3" type="audio/mpeg">
+                            Your browser does not support the audio element.
+                        </audio>
+                    </div>
+                </div>
+                
+                <!-- Transcript Column -->
+                <div class="transcript-container">
+                    <div class="transcript-text" id="transcript">
+                        <p> Transcript Incoming</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-links">
+                    <a href="index.html">Home</a>
+                    <a href="#">Research</a>
+                    <a href="#">Publications</a>
+                    <a href="#">Team</a>
+                    <a href="mailto:amar.kumar@mail.mcgill.ca">Contact</a>
+                </div>
+                <p class="copyright">© 2025 PRISM Research Team | McGill University | Probabilistic Vision Group</p>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>
