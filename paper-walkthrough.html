@@ -7,7 +7,129 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="css/styles.css">
     <link rel="stylesheet" href="css/walkthrough-style.css">
-    
+    <style>
+        /* Transcript style improvements */
+        .transcript-text p {
+            padding: 10px;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            margin-bottom: 10px;
+            line-height: 1.6;
+            border-left: 3px solid transparent;
+        }
+        
+        .transcript-text p:hover {
+            background-color: #e8f0fe;
+            border-left-color: #0066cc;
+        }
+        
+        .transcript-text p.highlight {
+            background-color: #e8f0fe;
+            border-left: 3px solid #0066cc;
+            font-weight: 500;
+        }
+        
+        .transcript-container {
+            max-height: 500px;
+            overflow-y: auto;
+            padding: 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: 5px;
+            background-color: #ffffff;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .topic-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+            align-items: center;
+        }
+        
+        .topic-button {
+            background-color: #0066cc;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.2s;
+        }
+        
+        .topic-button:hover {
+            background-color: #004c99;
+        }
+        
+        /* Audio container improvements */
+        .audio-container {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        @media (min-width: 768px) {
+            .audio-container {
+                flex-direction: row;
+            }
+            
+            .audio-player {
+                width: 35%;
+                padding-right: 20px;
+            }
+            
+            .transcript-container {
+                width: 65%;
+            }
+        }
+        
+        /* Audio player improvements */
+        .direct-player {
+            margin-bottom: 15px;
+        }
+        
+        .direct-player audio {
+            width: 100%;
+            border-radius: 8px;
+        }
+        
+        /* Sync status indicator */
+        .sync-status {
+            font-size: 14px;
+            padding: 8px;
+            margin-top: 10px;
+            text-align: center;
+            border-radius: 4px;
+            background-color: #f8f9fa;
+            color: #666;
+        }
+        
+        /* Scroll-to-top button */
+        .scroll-top-btn {
+            position: sticky;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #0066cc;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            opacity: 0.8;
+            transition: opacity 0.3s;
+        }
+        
+        .scroll-top-btn:hover {
+            opacity: 1;
+        }
+    </style>
 </head>
 <body>
     <div class="top-bar">
@@ -43,20 +165,25 @@
                 <h2>Audio Paper Walkthrough</h2>
             </div>
             
-            <p>Listen to our researchers explain key concepts and findings from the PRISM paper. The transcript will highlight in real-time as the audio plays.</p>
+            <p>Listen to our researchers explain key concepts and findings from the PRISM paper. The transcript will highlight automatically as the audio plays. You can also click on any part of the transcript to jump to that section.</p>
             
             <!-- Disclaimer about Notebook LM -->
             <div class="disclaimer">
                 <i class="fas fa-info-circle"></i>
                 <div>
-                    <strong>Note:</strong> This audio was generated using Notebook LM, an AI language model. The content represents our research, but the voice is synthetically generated.
+                    <strong>Note:</strong> This audio was generated using Notebook LM, an AI language model. The content represents our research, but the voice is synthetically generated. This 
                 </div>
             </div>
 
             <!-- Jump to topic section -->
             <div class="topic-buttons">
                 <h3 class="topic-heading">Jump to a topic:</h3>
-                <button class="topic-button" data-timestamp="0">Restart</button>
+                <button class="topic-button" data-timestamp="0">Introduction</button>
+                <button class="topic-button" data-timestamp="87">The Problem</button>
+                <button class="topic-button" data-timestamp="177">PRISM Approach</button>
+                <button class="topic-button" data-timestamp="258">How It Works</button>
+                <button class="topic-button" data-timestamp="442">Results & Findings</button>
+                <button class="topic-button" data-timestamp="896">Implications</button>
             </div>
             
             <div class="audio-container">
@@ -70,42 +197,43 @@
                             Your browser does not support the audio element.
                         </audio>
                     </div>
+                    <div class="sync-status" id="sync-status">Ready to play</div>
                 </div>
                 
                 <!-- Transcript Column -->
-                <div class="transcript-container">
+                <div class="transcript-container" id="transcript-container">
                     <div class="transcript-text" id="transcript">
                         <p data-start="0" data-end="29"><strong>Speaker 1 [0:00]</strong><br>When we talk about AI in medicine, you know, looking at all those scans and X rays, it's easy to get really excited about the potential. Oh, absolutely. But when you start to peel back the layers, yeah, there are some, some real challenges. And I think what it boils down to is that the AI right now, at least, could be getting tricked in a way, right, mistaking a medical device, something that's commonly seen in an image as a sign of a disease. Yeah,</p>
 
                         <p data-start="29" data-end="63"><strong>Speaker 2 [0:29]</strong><br>it's all about patterns, right? It's learning these patterns, but sometimes those patterns, they're not actually medically relevant. It's really fascinating, though, how these, what we call spurious correlations can actually throw a wrench into the whole reliability of AI in healthcare. Yeah. I mean, imagine an AI model that repeatedly sees a certain device in X rays of patients with, let's say, a specific heart condition. Okay, it might, it might start to make this incorrect connection and think, Oh, the presence of that device means that heart condition, right? Even if there's no real biological link there, yeah,</p>
 
-                        <p data-start="63" data-end="98"><strong>Speaker 1 [1:03]</strong><br>it's just, it's just what it's seen a bunch of times. Yeah, exactly. So that leads us to this deep dive that we're doing today. Absolutely. We're looking at a research paper, okay, titled prism, high resolution and precise counter factual medical image generation using language guided stable diffusion. Wow, that's a mouthful. It is a mouthful. Yeah, but this is coming out of mid ell, 2025, Oh, very cool. And the researchers are Amar Kumar, Anita Kris, Mohammed, Hawai'i and tal Argo from McGill University, mayel and Google research. Okay, so our mission for you listening today is to really understand how this new AI framework prism, yeah, is kind of tackling these, these really tricky issues of bias and reliability in medical AI, right, right? And it really all hinges on this idea of generating these really realistic medical images, but with specific alterations. Okay?</p>
+                        <p data-start="63" data-end="98"><strong>Speaker 1 [1:03]</strong><br>it's just, it's just what it's seen a bunch of times. Yeah, exactly. So that leads us to this deep dive that we're doing today. Absolutely. We're looking at a research paper, okay, titled prism, high resolution and precise counter factual medical image generation using language guided stable diffusion. Wow, that's a mouthful. It is a mouthful. Yeah, but this is coming out of MIDL 2025, Oh, very cool. And the researchers are Amar Kumar, Anita Kriz, Mohammed, Havaei and Tal Arbel from McGill University, MILA and Google research. Okay, so our mission for you listening today is to really understand how this new AI framework prism, yeah, is kind of tackling these, these really tricky issues of bias and reliability in medical AI, right, right? And it really all hinges on this idea of generating these really realistic medical images, but with specific alterations. Okay?</p>
 
                         <p data-start="98" data-end="133"><strong>Speaker 2 [1:58]</strong><br>So it's almost like, um, almost like training the AI to, sort of, like, I don't know, like, put on these special glasses, yes, that help it, to see the actual important medical information and ignore all the irrelevant stuff the noise. Yeah, like that analogy. So,</p>
 
                         <p data-start="133" data-end="161"><strong>Speaker 1 [2:13]</strong><br>so let's unpack this term a little bit. Okay, counterfactual images, I think, in the simplest terms, yeah, what we're talking about are images that would show, you know, what would have been there if something was different? Oh, okay, you have an x ray and it has a pacemaker in it, right? A counterfactual image would be like, what would that X ray look like without the pacemaker? Or what if, you know, a patient didn't have a certain disease? Yeah, you could generate an image of you know that</p>
 
-                        <p data-start="161" data-end="162"><strong>Unknown Speaker [2:41]</strong><br>scenario, like a</p>
+                        <p data-start="161" data-end="162"><strong>Speaker 1 [2:41]</strong><br>scenario, like a</p>
 
                         <p data-start="162" data-end="173"><strong>Speaker 2 [2:42]</strong><br>what if scenario. It is a what if scenario for medical imaging. That's really cool. Yeah. So where are we getting all this information from? What's the source material for our deep dive today?</p>
 
-                        <p data-start="173" data-end="187"><strong>Speaker 1 [2:53]</strong><br>Yeah. So the the basis for this entire deep dive is a full research paper. It was submitted to the medical imaging with Deep Learning Conference. That's my DL, mid. DL, okay, in 2025, so this is, we are right on</p>
+                        <p data-start="173" data-end="187"><strong>Speaker 1 [2:53]</strong><br>Yeah. So the the basis for this entire deep dive is a full research paper. It was submitted to the medical imaging with Deep Learning Conference. That's MIDL, MIDL, okay, in 2025, so this is, we are right on</p>
 
-                        <p data-start="187" data-end="189"><strong>Unknown Speaker [3:07]</strong><br>the cutting edge here. So</p>
+                        <p data-start="187" data-end="189"><strong>Speaker 1 [3:07]</strong><br>the cutting edge here. So</p>
 
                         <p data-start="189" data-end="218"><strong>Speaker 2 [3:09]</strong><br>fresh off the press, so fresh, yeah, so let's really kind of dig into this problem. Yeah, that prism is trying to address. I know we touched on it briefly, but understanding kind of the core challenges is, is key to really appreciating why this is so significant, okay, so deep learning in medical imaging, right? Incredibly powerful, sure, but it's not perfect. It has its limits,</p>
 
-                        <p data-start="218" data-end="220"><strong>Unknown Speaker [3:38]</strong><br>yeah, and one of</p>
+                        <p data-start="218" data-end="220"><strong>Speaker 1 [3:38]</strong><br>yeah, and one of</p>
 
                         <p data-start="220" data-end="253"><strong>Speaker 1 [3:40]</strong><br>the limitations that we bump into a lot is, as we've been talking about these spurious correlations, yeah, where the AI, you know, it grabs onto these patterns in the data, but they're just coincidences, right? They don't actually tell us about the medical condition, yeah? Like, for instance, let's say there's a hospital system, right, that always uses a specific brand of, I don't know, a heart valve, right, on patients with a certain type of heart disease, okay, well, the AI might mistakenly learn that that heart valve brand, like the device itself, is somehow linked to the disease, right? Even though there's no real medical connection there,</p>
 
                         <p data-start="253" data-end="294"><strong>Speaker 2 [4:13]</strong><br>it's just that that hospital happens to use that brand, yeah, so that's one challenge. Then you've also got the issue of data imbalances, okay, some medical conditions are, well, thankfully they're less common, right? Which means the AI doesn't have as many examples to learn from, yeah, which makes its job a lot harder. Makes sense. And then on top of that, many medical image data sets, they just don't have these detailed text descriptions. They might just say, you know, disease present, disease absent very basic stuff, right? But they lack that rich contextual information that could really help an AI understand what's going on in the images, right?</p>
 
-                        <p data-start="294" data-end="297"><strong>Unknown Speaker [4:54]</strong><br>The nuance, exactly the nuance. So</p>
+                        <p data-start="294" data-end="297"><strong>Speaker 2 [4:54]</strong><br>The nuance, exactly the nuance. So</p>
 
                         <p data-start="297" data-end="321"><strong>Speaker 1 [4:57]</strong><br>now, researchers have looked into this idea of gender. Creating counterfactual images before, right? Yeah, that's right, but, but there's a catch, there's a catch. There's a bit of a paradox here. A paradox Tell me more, because a lot of those approaches in the past, things like the classifier guided methods or or methods based on structural causal models, yeah, often they rely on the same potentially flawed data, right that they're trying</p>
 
-                        <p data-start="321" data-end="322"><strong>Unknown Speaker [5:21]</strong><br>to correct for in the first place</p>
+                        <p data-start="321" data-end="322"><strong>Speaker 1 [5:21]</strong><br>to correct for in the first place</p>
 
                         <p data-start="322" data-end="382"><strong>Speaker 2 [5:22]</strong><br>I see the issue. So if your initial AI, the one that's guiding this whole counter factual generation process, already has a bias, right? Let's say it's associating that heart valve with a specific heart condition, yeah, even when you ask it to create an image without the heart condition, right, it might still remove the heart valve, right? Because it thinks those two things are always connected, yeah, even though, in reality they might not be, it's learned the wrong thing exactly. And then there's the technical side of things, yeah, it's not easy to build these AI systems, these end to end systems for medical imaging. They face this constant balancing act, because to generate a really detailed, you know, high quality image, they need to look at the tiny little details, the pixels, right? But to actually classify what's in that image, yeah, they need to understand these bigger, more abstract concepts, right, and juggling those two things at the same time, yeah, that's not easy. That's</p>
 
@@ -149,7 +277,7 @@
 
                         <p data-start="763" data-end="792"><strong>Speaker 2 [12:43]</strong><br>Okay, so think about it this way. Okay, inside the unit, there are these things called cross attention modules. Cross attention modules, yeah, these modules allow the model to focus on different parts of the text prompt. Okay, as it's generating different parts of the image. Okay, so if the prompt says no pleural effusion, right? The attention mechanism will zero in on the lung areas in the image, okay? And make sure that there's no fluid in those regions. Okay? It's like the prompt is highlighting what to pay attention to. It's like a conductor,</p>
 
-                        <p data-start="792" data-end="794"><strong>Unknown Speaker [13:12]</strong><br>yeah.</p>
+                        <p data-start="792" data-end="794"><strong>Speaker 1 [13:12]</strong><br>yeah.</p>
 
                         <p data-start="794" data-end="801"><strong>Speaker 1 [13:14]</strong><br>Okay, so this is really helpful. We're kind of getting under the hood of how this all works, yeah. So the big question,</p>
 
@@ -195,7 +323,7 @@
 
                         <p data-start="1157" data-end="1228"><strong>Speaker 2 [19:17]</strong><br>those diagnoses more accurate. So any other kind of deeper insights that came out of this research? Oh, there are a few more interesting things. Okay, so in Appendix F, they talk about how they validated the image modifications using something called v Q A, models. V Q A, what is that v Q A stands for visual question answering. Oh, okay, so these are models like, for example, Claude, 3.5 sonnet and Lavi Med, okay, these are state of the art AI systems, Oh, yeah. And what they found was that these V QA models could correctly identify the presence or absence of medical conditions in both the original images and the counterfactual images generated by prism. So it's almost like getting confirmation from another AI, yes, like a second opinion from a. Really smart colleague, and then in Appendix G, there's this fascinating observation about cardiomegaly and pacemakers. Okay? So they noticed that when prism generated a counterfactual image without cardiomegaly, it often also removed the pacemaker, but it didn't do this when generating an image without pleural effusion, which suggests that the model is actually learning these complex relationships, right, that exist in the medical data.</p>
 
-                        <p data-start="1228" data-end="1232"><strong>Unknown Speaker [20:28]</strong><br>It's understanding that those two things are often seen together exactly.</p>
+                        <p data-start="1228" data-end="1232"><strong>Speaker 1 [20:28]</strong><br>It's understanding that those two things are often seen together exactly.</p>
 
                         <p data-start="1232" data-end="1260"><strong>Speaker 2 [20:31]</strong><br>It's not just blindly following the text prompts. It's picking up on these patterns, yeah. And finally, in Appendix H, they talk about some of the really tough scenarios, okay, like trying to remove devices that are hidden by shadows, yeah, or that are overlapping with bones, yeah? And they found that prism was surprisingly good at handling these tricky cases. Oh, okay. It was able to fill in those missing parts of the image with anatomically realistic structures really. Yeah, it's pretty remarkable.</p>
 
@@ -213,12 +341,11 @@
 
                         <p data-start="1338" data-end="1376"><strong>Speaker 2 [22:18]</strong><br>are huge. Okay. I mean, prism could be a game changer for developing better diagnostic AI models, okay, models that aren't so easily fooled by those misleading correlations, right? It can also help researchers understand diseases better by letting them isolate and manipulate specific features in the images. Yeah, and in the future, you know, down the line? Yeah, I could even see it being used for personalized medicine. Oh, how so? Well, imagine clinicians being able to explore these what if scenarios, right related to a patient's specific medical images to help them make more informed treatment</p>
 
-                        <p data-start="1376" data-end="1378"><strong>Unknown Speaker [22:56]</strong><br>decisions? Yeah, that's</p>
+                        <p data-start="1376" data-end="1378"><strong>Speaker 1 [22:56]</strong><br>decisions? Yeah, that's</p>
 
                         <p data-start="1378" data-end="1396"><strong>Speaker 1 [22:58]</strong><br>That's really incredible to think about. It's exciting stuff. So for you know, our listeners out there who are in this field, yeah, in the medical imaging AI field, yeah. Want to learn more.</p>
-
-                        <p data-start="1396" data-end="1398"><strong>Speaker 1 [23:16]</strong><br>Thank you for listening to our paper walkthrough of PRISM. For more information, please visit our website or contact the research team.</p>
                     </div>
+                    <button class="scroll-top-btn" id="scroll-top-btn"><i class="fas fa-arrow-up"></i></button>
                 </div>
             </div>
         </div>
@@ -239,5 +366,226 @@
         </div>
     </footer>
 
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // DOM elements
+            const audio = document.getElementById('paper-audio');
+            const transcript = document.getElementById('transcript');
+            const transcriptContainer = document.getElementById('transcript-container');
+            const transcriptParagraphs = transcript.querySelectorAll('p');
+            const topicButtons = document.querySelectorAll('.topic-button');
+            const syncStatus = document.getElementById('sync-status');
+            const scrollTopBtn = document.getElementById('scroll-top-btn');
+            
+            // Keep track of currently highlighted paragraph
+            let lastHighlightedParagraph = null;
+            let isAutoScrolling = false;
+            
+            // Format time helper function
+            function formatTime(seconds) {
+                const minutes = Math.floor(seconds / 60);
+                const remainingSeconds = Math.floor(seconds % 60);
+                return `${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`;
+            }
+            
+            // Make transcript paragraphs clickable
+            transcriptParagraphs.forEach(paragraph => {
+                paragraph.addEventListener('click', function() {
+                    const startTime = parseFloat(this.getAttribute('data-start'));
+                    audio.currentTime = startTime;
+                    
+                    // Only auto-play if audio is already playing or if this is the first click
+                    if (!audio.paused || lastHighlightedParagraph === null) {
+                        audio.play();
+                    }
+                    
+                    // Manually highlight the clicked paragraph
+                    updateHighlightAndScroll(this);
+                    
+                    syncStatus.textContent = `Jumped to ${formatTime(startTime)}`;
+                });
+            });
+            
+            // Update highlighted paragraph and scroll to it
+            function updateHighlightAndScroll(paragraph) {
+                // Remove highlight from previous paragraph
+                if (lastHighlightedParagraph) {
+                    lastHighlightedParagraph.classList.remove('highlight');
+                }
+                
+                // Add highlight to current paragraph
+                paragraph.classList.add('highlight');
+                lastHighlightedParagraph = paragraph;
+                
+                // Scroll to the paragraph (if not manually scrolling)
+                if (!isAutoScrolling) {
+                    isAutoScrolling = true;
+                    
+                    // Calculate the position to scroll to (center paragraph in container)
+                    const containerHeight = transcriptContainer.clientHeight;
+                    const paragraphHeight = paragraph.offsetHeight;
+                    const containerTop = transcriptContainer.getBoundingClientRect().top;
+                    const paragraphTop = paragraph.getBoundingClientRect().top;
+                    
+                    const scrollOffset = paragraphTop - containerTop - (containerHeight / 2) + (paragraphHeight / 2);
+                    
+                    transcriptContainer.scrollBy({
+                        top: scrollOffset,
+                        behavior: 'smooth'
+                    });
+                    
+                    // Reset auto-scrolling flag after animation completes
+                    setTimeout(() => {
+                        isAutoScrolling = false;
+                    }, 800); // Slightly longer than the scroll animation
+                }
+            }
+            
+            // Main function for synchronized highlighting
+            function syncTranscriptWithAudio() {
+                const currentTime = audio.currentTime;
+                
+                // Update the sync status display
+                syncStatus.textContent = `Playing at ${formatTime(currentTime)}`;
+                
+                // Find the corresponding paragraph for the current audio time
+                let currentParagraph = null;
+                
+                // First pass: try to find an exact match based on time range
+                for (const p of transcriptParagraphs) {
+                    const start = parseFloat(p.getAttribute('data-start'));
+                    const end = parseFloat(p.getAttribute('data-end'));
+                    
+                    if (currentTime >= start && currentTime < end) {
+                        currentParagraph = p;
+                        break;
+                    }
+                }
+                
+                // Second pass: if no exact match, find the closest paragraph
+                if (!currentParagraph && !audio.paused) {
+                    let closestDiff = Infinity;
+                    
+                    for (const p of transcriptParagraphs) {
+                        const start = parseFloat(p.getAttribute('data-start'));
+                        const end = parseFloat(p.getAttribute('data-end'));
+                        
+                        // Calculate how close this paragraph is to current time
+                        // Consider both start and end times
+                        const diffToStart = Math.abs(currentTime - start);
+                        const diffToEnd = Math.abs(currentTime - end);
+                        const minDiff = Math.min(diffToStart, diffToEnd);
+                        
+                        if (minDiff < closestDiff) {
+                            closestDiff = minDiff;
+                            currentParagraph = p;
+                        }
+                    }
+                }
+                
+                // Only update if we found a paragraph and it's different from the current one
+                if (currentParagraph && currentParagraph !== lastHighlightedParagraph) {
+                    updateHighlightAndScroll(currentParagraph);
+                }
+            }
+            
+            // Enable topic navigation buttons
+            topicButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const timestamp = parseFloat(this.getAttribute('data-timestamp'));
+                    audio.currentTime = timestamp;
+                    audio.play();
+                    
+                    // Update UI
+                    syncStatus.textContent = `Jumped to topic: ${this.textContent}`;
+                });
+            });
+            
+            // Scroll to top button
+            scrollTopBtn.addEventListener('click', function() {
+                transcriptContainer.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+            
+            // Initialize audio event listeners
+            audio.addEventListener('play', function() {
+                syncStatus.textContent = 'Playing...';
+                // Start continuous sync when playing
+                startContinuousSync();
+            });
+            
+            audio.addEventListener('pause', function() {
+                syncStatus.textContent = 'Paused';
+                // Stop continuous sync when paused
+                stopContinuousSync();
+            });
+            
+            audio.addEventListener('ended', function() {
+                syncStatus.textContent = 'Playback ended';
+                stopContinuousSync();
+            });
+            
+            // Track manual scrolling to prevent interference with auto-scroll
+            transcriptContainer.addEventListener('wheel', function() {
+                isAutoScrolling = false;
+            });
+            
+            transcriptContainer.addEventListener('touchmove', function() {
+                isAutoScrolling = false;
+            });
+            
+            // Use requestAnimationFrame for smooth, efficient updates
+            let animationFrameId = null;
+            
+            function startContinuousSync() {
+                function updateLoop() {
+                    syncTranscriptWithAudio();
+                    animationFrameId = requestAnimationFrame(updateLoop);
+                }
+                
+                animationFrameId = requestAnimationFrame(updateLoop);
+            }
+            
+            function stopContinuousSync() {
+                if (animationFrameId) {
+                    cancelAnimationFrame(animationFrameId);
+                    animationFrameId = null;
+                }
+            }
+            
+            // Initialize - make sure we have highlighting on load
+            audio.addEventListener('loadedmetadata', function() {
+                syncStatus.textContent = `Ready (${formatTime(audio.duration)})`;
+            });
+            
+            // Add keyboard navigation
+            document.addEventListener('keydown', function(e) {
+                // Space bar toggles play/pause when not focusing on a button or input
+                if (e.code === 'Space' && 
+                    document.activeElement.tagName !== 'BUTTON' && 
+                    document.activeElement.tagName !== 'INPUT') {
+                    e.preventDefault();
+                    if (audio.paused) {
+                        audio.play();
+                    } else {
+                        audio.pause();
+                    }
+                }
+                
+                // Left/right arrows seek backward/forward by 5 seconds
+                if (e.code === 'ArrowLeft') {
+                    audio.currentTime = Math.max(0, audio.currentTime - 5);
+                    syncTranscriptWithAudio();
+                }
+                
+                if (e.code === 'ArrowRight') {
+                    audio.currentTime = Math.min(audio.duration, audio.currentTime + 5);
+                    syncTranscriptWithAudio();
+                }
+            });
+        });
+    </script>
 </body>
 </html>
