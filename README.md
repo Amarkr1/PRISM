@@ -23,12 +23,12 @@ PRISM - **Pr**ecise counterfactual **I**mage generation using language guided **
 ## Table of Contents
 - [Repository Structure](#repository-structure)
 - [Getting Started](#getting-started)
-  - [Environment Setup](#environment-setup)
-  - [Dataset Creation](#dataset-creation)
+  - [Virtual Environment Setup](#virtual-environment-setup)
+  - [Create Dataset](#create-dataset)
 - [Core Functionalities](#core-functionalities)
   - [Finetuning Stable Diffusion](#finetune-stable-diffusion)
   - [Counterfactual Image Generation](#counterfactual-image-generation)
-  - [Medical Image Classification](#classifiers)
+  - [Classifiers](#classifiers)
 - [Examples](#examples)
 - [Citation](#citation)
 
@@ -42,18 +42,21 @@ This repository is organized into two branches:
 > #### You are currently on the <u>*main*</u> branch of this repository. Visit the [website](https://github.com/Amarkr1/PRISM/tree/website) branch to access the website files and source code.
 
 
-## Create Virtual Environment Venv
-Create a virtual Environment and install the nessecary packages from the `requirements.txt` file as shown:
+## Getting Started
+### Virtual Environment Setup
+Create a virtual Environment and install the necessary packages from the `requirements.txt` file as shown:
 ```bash
 pip install -r requirements.txt --no-cache
 ```
-
-## Create Datasets
-
-**Data Preparation**: Signup to access the CheXpert dataset from [here](https://stanfordmlgroup.github.io/competitions/chexpert/). Split the dataset into 70-15-15 for the train-validation-test split. This split will remain the same for all the experiments
+> Note: The `transformers` and `diffusers` libraries version must match as specified in the `requirements.txt`. In case of error due to library mismatch, `huggingface_hub==0.25.2` can also be installed.
 
 
-## Finetune Stable Diffusion
+### Create Dataset
+
+**Data Preparation**: Signup to access the CheXpert dataset from [here](https://stanfordmlgroup.github.io/competitions/chexpert/). Split the dataset into 70-15-15 for the train-validation-test split. This split will remain the same for all the experiments.
+
+## Core Functionalities
+### Finetune Stable Diffusion
 
 PRISM utilises the backbone of Stable Diffusion v1.5. 
 
