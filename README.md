@@ -90,6 +90,22 @@ Below are the important parameters that sets the paths:
 
 ### Counterfactual Image Generation
 
+```bash
+python generate_cf_images.py
+```
+The `generate_cf_images.py` script uses a technique to generate counterfactual versions of chest X-ray images. 
+#### Key Parameters
+
+| **Parameter** | **Description** |
+|--------|------------------|
+| `ldm_type` | Type of diffusion model to use. Options: `stable_diffusion_v1_4`, `stable_diffusion_v1_5`, `stable_diffusion_mimic_cxr_v0.1`, `finetuned_chexpert` |
+| `self_replace_steps_range` | Controls the strength of self-attention replacement during editing. Higher values result in stronger edits but less preservation of original structure |
+| `edit_word_weight` | Emphasis placed on the edit word in the prompt. Higher values lead to stronger edits |
+| `clip_img_thresh` | Threshold for image-image similarity (higher = more similar to original) |
+| `clip_thresh` | Threshold for image-text similarity |
+| `clip_dir_thresh` | Threshold for directional similarity (measures if edit is in the right direction) |
+| `text_similarity_threshold` | Controls filtering of edits based on text similarity to ground truth |
+
 ### Classifiers
 
 ## Baselines
