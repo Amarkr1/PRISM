@@ -29,6 +29,9 @@ PRISM - **Pr**ecise counterfactual **I**mage generation using language guided **
   - [Finetuning Stable Diffusion](#finetune-stable-diffusion)
   - [Counterfactual Image Generation](#counterfactual-image-generation)
   - [Classifiers](#classifiers)
+- [Baselines](#baselines)
+  - [Cycle-GAN](#cycle-gan)
+  - [Others](#others)   
 - [Examples](#examples)
 - [Citation](#citation)
 
@@ -60,9 +63,14 @@ pip install -r requirements.txt --no-cache
 
 PRISM utilises the backbone of Stable Diffusion v1.5. 
 
-## Counterfactual Image Generation
+### Counterfactual Image Generation
 
-## Classifiers
+### Classifiers
+
+## Baselines
+### Cyle-GAN
+
+### Other
 
 ## Examples
 <table border="0" cellspacing="0" cellpadding="0" style="border:none; border-collapse:collapse;">
