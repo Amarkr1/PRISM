@@ -14,16 +14,16 @@ PRISM - **Pr**ecise counterfactual **I**mage generation using language guided **
 
 <p align="center">
 <picture>
-  <img src="https://github.com/Amarkr1/PRISM/blob/main/images/arch_v2.png">
+  <img src="https://github.com/Amarkr1/PRISM/blob/website/images/arch_v2.png">
 </picture>
 </p>
 
 ## Editing Medical Devices usign PRISM
 
-![remove_dev](images/animation5.gif)
+![remove_dev](https://github.com/Amarkr1/PRISM/blob/website/images/animation5.gif)
 
 ## XAI using PRISM
-![XAI](images/animation4.gif)
+![XAI](https://github.com/Amarkr1/PRISM/blob/website/images/animation4.gif)
 
 ## Table of Contents
 - [Create Virtual Environment](#create-virtual-environment-venv)
