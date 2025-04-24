@@ -4,10 +4,3 @@ compatibility_date = "2025-03-24"
 kv_namespaces = [
   { binding = "VISITOR_COUNTER", id = "349349796b7748eca22d13e0bc6ea7da" }
 ]
-
-[build]
-command = "npm run build" # Adjust this if you use a different build command
-
-[site]
-bucket = "./public" # Adjust this path if your build output is in a different directory
-branch = "website" # This sets your branch to "website" instead of "main"
