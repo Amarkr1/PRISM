@@ -18,20 +18,29 @@ PRISM - **Pr**ecise counterfactual **I**mage generation using language guided **
 </picture>
 </p>
 
-## Editing Medical Devices usign PRISM
 
-![remove_dev](https://github.com/Amarkr1/PRISM/blob/website/images/animation5.gif)
-
-## XAI using PRISM
-![XAI](https://github.com/Amarkr1/PRISM/blob/website/images/animation4.gif)
 
 ## Table of Contents
-- [Create Virtual Environment](#create-virtual-environment-venv)
-- [Create Datasets](#create-datasets)
-- [Finetune Stable Diffusion](#finetune-stable-diffusion)
-- [Counterfactual Image Generation](#counterfactual-image-generation)
-- [Classifiers](#classifiers)
+- [Repository Structure](#repository-structure)
+- [Getting Started](#getting-started)
+  - [Environment Setup](#environment-setup)
+  - [Dataset Creation](#dataset-creation)
+- [Core Functionalities](#core-functionalities)
+  - [Finetuning Stable Diffusion](#finetune-stable-diffusion)
+  - [Counterfactual Image Generation](#counterfactual-image-generation)
+  - [Medical Image Classification](#classifiers)
+- [Examples](#examples)
 - [Citation](#citation)
+
+
+## Repository Structure
+
+This repository is organized into two branches:
+- **`main`**: Contains all source code and implementation files
+- **`website`**: Houses the project website and documentation assets
+
+> #### You are currently on the <u>*main*</u> branch of this repository. Visit the [website](https://github.com/Amarkr1/PRISM/tree/website) branch to access the website files and source code.
+
 
 ## Create Virtual Environment Venv
 Create a virtual Environment and install the nessecary packages from the `requirements.txt` file as shown:
@@ -51,6 +60,18 @@ PRISM utilises the backbone of Stable Diffusion v1.5.
 ## Counterfactual Image Generation
 
 ## Classifiers
+
+## Examples
+<table border="0" cellspacing="0" cellpadding="0" style="border:none; border-collapse:collapse;">
+  <tr>
+    <td width="50%" style="border:none;"><img src="https://github.com/Amarkr1/PRISM/blob/website/images/animation5.gif" alt="Medical Device Editing" width="100%"></td>
+    <td width="50%" style="border:none;"><img src="https://github.com/Amarkr1/PRISM/blob/website/images/animation4.gif" alt="XAI" width="100%"></td>
+  </tr>
+  <tr>
+    <td align="center" style="border:none;"><strong>Editing Medical Devices using PRISM</strong></td>
+    <td align="center" style="border:none;"><strong>XAI using PRISM</strong></td>
+  </tr>
+</table>
 
 ## Citation
 ```bibtex
