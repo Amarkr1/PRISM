@@ -61,7 +61,32 @@ pip install -r requirements.txt --no-cache
 ## Core Functionalities
 ### Finetune Stable Diffusion
 
-PRISM utilises the backbone of Stable Diffusion v1.5. 
+PRISM utilises the backbone of Stable Diffusion(SD) v1.5. 
+
+```bash
+torchrun --nproc_per_node=4 finetune_chexpert.py
+```
+> *Note: the command to finetune is `torchrun` and not `python`*
+
+The `finetune_chexpert.py` script enables distributed training to fine-tune Stable Diffusion on chest X-ray images with associated pathology labels. The script:
+
+1. Creates automatic captions based on pathology findings
+2. Trains only the UNet component while freezing VAE and text encoder
+3. Supports distributed training with mixed precision
+4. Includes checkpoint saving and logging
+
+Below are the important parameters that sets the paths:
+
+| **Parameter** | **Default** | **Description** |
+|--------|------|------------------|
+| `--model_name_or_path` | `runwayml/stable-diffusion-v1-5` | Base pretrained model to fine-tune |
+| `--train_data_path` | `/usr/local/.../finetune.csv` | Path to CheXpert CSV file with pathology labels |
+| `--image_root_path` | `/usr/local/datasets/` | Root directory containing the chest X-ray images |
+| `--output_dir` | `/usr/local/.../finetuned` | Directory to save the fine-tuned model and checkpoints |
+
+
+> For fine-tuning, we use 4 A100 GPUs with 40GB each. The wall clock time to fine-tune SDv1.5 was 6 hours.
+
 
 ### Counterfactual Image Generation
 
