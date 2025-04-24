@@ -14,8 +14,8 @@ PRISM - **Pr**ecise counterfactual **I**mage generation using language guided **
 
 <p align="center">
 <picture>
-  <img src="https://github.com/Amarkr1/PRISM/blob/main/images/arch_v2.png">
+  <img src="https://github.com/Amarkr1/PRISM/blob/website/images/arch_v2.png">
 </picture>
 </p>
 
-You are currently on the `website` branch of this repository. Move to the main branch if you are looking to access the source code
+> #### You are currently on the <u>*website*</u> branch of this repository. Visit the [main](https://github.com/Amarkr1/PRISM/blob/main/) branch to access source code.
